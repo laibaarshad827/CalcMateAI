@@ -66,11 +66,28 @@ export function AIResponse({ exchange, onRetry }: { exchange: AIExchange; onRetr
           )}
 
           <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/30 bg-gradient-to-r from-primary/15 to-info/10 p-3">
-            <div className="flex min-w-0 flex-col">
-              <span className="text-xs font-medium uppercase tracking-wide text-primary">Final answer</span>
+            <div className="flex min-w-0 flex-col gap-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-medium uppercase tracking-wide text-primary">Final answer</span>
+                {exchange.solution.verified && (
+                  <span className="rounded bg-success/15 px-1.5 py-0.5 text-[10px] font-medium text-success">
+                    Python verified
+                  </span>
+                )}
+                {exchange.solution.isApproximate !== undefined && (
+                  <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                    {exchange.solution.isApproximate ? 'Approximate' : 'Exact'}
+                  </span>
+                )}
+              </div>
               <span className="break-words font-mono text-lg font-semibold text-foreground">
                 {exchange.solution.finalAnswer}
               </span>
+              {exchange.solution.expression && (
+                <code className="w-fit max-w-full overflow-x-auto rounded bg-background/70 px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground">
+                  {exchange.solution.expression}
+                </code>
+              )}
             </div>
             <Button
               variant="ghost"

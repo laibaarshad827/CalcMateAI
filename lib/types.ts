@@ -32,6 +32,10 @@ export interface AISolution {
   steps: AISolutionStep[]
   finalAnswer: string
   explanation?: string
+  expression?: string
+  verified?: boolean
+  isApproximate?: boolean
+  isAmbiguous?: boolean
   model?: string
 }
 

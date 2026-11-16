@@ -2,7 +2,7 @@
 
 import { Loader2, PlugZap } from 'lucide-react'
 import { useTheme } from 'next-themes'
-import { useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { toast } from 'sonner'
 import { useApp } from '@/components/app-provider'
 import { Button } from '@/components/ui/button'
@@ -63,6 +63,10 @@ export function SettingsPanel() {
   const { theme, setTheme } = useTheme()
   const [urlDraft, setUrlDraft] = useState(settings.apiBaseUrl)
   const [testing, setTesting] = useState(false)
+
+  useEffect(() => {
+    setUrlDraft(settings.apiBaseUrl)
+  }, [settings.apiBaseUrl])
 
   async function testConnection() {
     setTesting(true)

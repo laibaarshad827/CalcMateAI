@@ -9,13 +9,15 @@ const LABELS = { checking: 'Checking backend', online: 'Flask backend online', o
 
 export function BackendStatus({ className }: { className?: string }) {
   const { settings } = useApp()
-  const { status, isValidating, recheck } = useBackendHealth(settings.apiBaseUrl)
+  const { status, data, isValidating, recheck } = useBackendHealth(settings.apiBaseUrl)
+  const missingKey = status === 'online' && data?.gemini_configured === false
+  const label = missingKey ? 'Flask online · Add Gemini key' : LABELS[status]
 
   return (
     <button
       type="button"
       onClick={recheck}
-      title={`${LABELS[status]} — ${settings.apiBaseUrl}. Click to re-check.`}
+      title={`${label} — ${settings.apiBaseUrl}. Click to re-check.`}
       className={cn(
         'inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground',
         className,
@@ -25,12 +27,13 @@ export function BackendStatus({ className }: { className?: string }) {
         aria-hidden
         className={cn(
           'size-2 rounded-full',
-          status === 'online' && 'bg-success shadow-[0_0_8px] shadow-success',
+          status === 'online' && !missingKey && 'bg-success shadow-[0_0_8px] shadow-success',
+          missingKey && 'bg-amber-500',
           status === 'offline' && 'bg-destructive',
           status === 'checking' && 'animate-pulse bg-muted-foreground',
         )}
       />
-      <span>{LABELS[status]}</span>
+      <span>{label}</span>
       <RefreshCw className={cn('size-3', isValidating && 'animate-spin')} aria-hidden />
     </button>
   )

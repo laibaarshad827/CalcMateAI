@@ -74,6 +74,8 @@ async function request<T>(baseUrl: string, path: string, init: RequestInit = {},
 
 export interface HealthResponse {
   status: string
+  gemini_configured?: boolean
+  model?: string
   [key: string]: unknown
 }
 
@@ -87,6 +89,10 @@ interface RawSolveResponse {
   final_answer?: string | number
   answer?: string | number
   explanation?: string
+  expression?: string
+  verified?: boolean
+  is_approximate?: boolean
+  is_ambiguous?: boolean
   model?: string
 }
 
@@ -108,6 +114,10 @@ function normalizeSolution(question: string, raw: RawSolveResponse): AISolution 
     steps,
     finalAnswer: String(finalAnswer),
     explanation: raw.explanation,
+    expression: raw.expression || undefined,
+    verified: raw.verified,
+    isApproximate: raw.is_approximate,
+    isAmbiguous: raw.is_ambiguous,
     model: raw.model,
   }
 }
